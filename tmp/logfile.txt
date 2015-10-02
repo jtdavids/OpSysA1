@@ -1,8 +1,20 @@
 [Wed Dec 31 17:00:00 1969
-] Info: Initializing monitoring of process 'ls' (PID 1962).
+] Info: Initializing monitoring of process 'ls' (PID 1994).
 [Wed Dec 31 17:00:00 1969
-] Info: Initializing monitoring of process 'firefox' (PID 5105).
+] Info: Initializing monitoring of process 'ls' (PID 1484).
 [Wed Dec 31 17:00:00 1969
-] Action: PID 1962 (ls) killed after exceeding 5 seconds.
+] Info: No 'cd' proccesses found.
 [Wed Dec 31 17:00:00 1969
-] Action: PID 5105 (firefox) killed after exceeding 5 seconds.
+] Info: No 'thisshouldnotwork' proccesses found.
+[Wed Dec 31 17:00:00 1969
+] Info: No 'firefox' proccesses found.
+[Wed Dec 31 17:00:00 1969
+] Info: Initializing monitoring of process 'testrun' (PID 3539).
+[Wed Dec 31 17:00:00 1969
+] Info: Initializing monitoring of process 'testrun' (PID 3538).
+[Wed Dec 31 17:00:00 1969
+] Action: PID 1994 (ls) killed after exceeding 5 seconds.
+[Wed Dec 31 17:00:00 1969
+] Action: PID 3539 (testrun) killed after exceeding 5 seconds.
+[Wed Dec 31 17:00:00 1969
+] Action: PID 3538 (testrun) killed after exceeding 5 seconds.

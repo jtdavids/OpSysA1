@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
 
 	FILE *file;
 	int checksuccess;
+	int found_pid = 0;
 	char pid[256];
 	char pnames[262] = "pgrep ";
 	int pidtokill;
@@ -52,22 +53,17 @@ int main(int argc, char* argv[])
 	int i = 0;
 	for (i = 1; i<pnames_counter; i++){
 		strcpy(pnames, "pgrep ");
+		strtok(processnames[i],"\n");
 		strcat(pnames, processnames[i]);
 		printf("%s\n",pnames);
 
 		file = popen( pnames , "r");
 		if (file == NULL){
-			printf("%s file null\n",pnames);
-			//process is not running
-			strcpy(msg, "Info: No '");
-			strtok(processnames[i],"\n");
-			strcat(msg, processnames[i]);
-			strcat(msg,"' proccesses found.");
-			writeToLog(msg);
-			continue;
+			//popen error
 		}
 		while (fgets(pid, 256, file) != NULL){
 			printf("%s\n",pid);
+			found_pid = 1;
 			if((child = fork()) < 0){
 
 			} else if (child == 0){
@@ -83,6 +79,7 @@ int main(int argc, char* argv[])
 				writeToLog(msg);
 
 				sleep(killtime);
+				printf("sleep %s\n",pid);
 				int result = kill(pidtokill,1);
 				char kill_time[6];
 				sprintf(kill_time, "%d", killtime);
@@ -101,14 +98,25 @@ int main(int argc, char* argv[])
 					writeToLog(msg);
 					exit(0);
 				} else {
+					printf("%d killed early\n", pidtokill);
 					//process exited earlier, no need to log output.
 					exit(-1);
 				}
 
 			}
-		processkilled_count++;
+			processkilled_count++;
 		}
-		printf("%s end of while\n",pnames);
+		if (found_pid == 0){
+			printf("%s file null\n",pnames);
+			//process is not running
+			strcpy(msg, "Info: No '");
+			strtok(processnames[i],"\n");
+			strcat(msg, processnames[i]);
+			strcat(msg,"' proccesses found.");
+			writeToLog(msg);
+			continue;
+		}
+		found_pid = 0;
 
 		checksuccess = pclose(file);
 		if (checksuccess == -1) {
@@ -118,7 +126,8 @@ int main(int argc, char* argv[])
 	}
 	int k;
 	int exit_status;
-	for (k = 0; k < processkilled_count-1; k++){
+	printf("processes: %d\n", processkilled_count);
+	for (k = 0; k < processkilled_count; k++){
 		wait(&exit_status);
 	}
 	return 0;
