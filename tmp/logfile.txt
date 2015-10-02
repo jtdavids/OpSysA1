@@ -1,0 +1,8 @@
+[Wed Dec 31 17:00:00 1969
+] Info: Initializing monitoring of process 'ls' (PID 1962).
+[Wed Dec 31 17:00:00 1969
+] Info: Initializing monitoring of process 'firefox' (PID 5105).
+[Wed Dec 31 17:00:00 1969
+] Action: PID 1962 (ls) killed after exceeding 5 seconds.
+[Wed Dec 31 17:00:00 1969
+] Action: PID 5105 (firefox) killed after exceeding 5 seconds.
