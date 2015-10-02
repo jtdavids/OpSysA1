@@ -5,6 +5,7 @@
 
 
 void writeToLog(char *message);
+void killProcNanny();
 char* PROCNANNYLOGS = "../tmp/logfile.txt";
 //Procnanny
 int main(int argc, char* argv[])
@@ -15,7 +16,9 @@ int main(int argc, char* argv[])
     char line[256];
     char processnames[129][256];
    
-    int killtime;
+    int killtime;  
+
+    killProcNanny();
 
     int pnames_counter = 0;
     while (fgets(line, sizeof(line), config)) {
@@ -24,12 +27,9 @@ int main(int argc, char* argv[])
     		pnames_counter++;
     	} else{
         	strcpy(processnames[pnames_counter],line);
-        	//printf("%s\n",processnames[pnames_counter]);
-        	//printf("test");
-			//printf("%s\n",line);
         	pnames_counter++;
     	}
-    	printf("%d\n", pnames_counter);
+    	printf("%d\n", pnames_counter); 
     }
     fclose(config);
 
@@ -79,7 +79,6 @@ int main(int argc, char* argv[])
 				writeToLog(msg);
 
 				sleep(killtime);
-				printf("sleep %s\n",pid);
 				int result = kill(pidtokill,1);
 				char kill_time[6];
 				sprintf(kill_time, "%d", killtime);
@@ -141,29 +140,30 @@ void writeToLog(char *message){
     fclose(logfile);
 }
 
+void killProcNanny(){
+	FILE *file;
+	int checksuccess;
+	char proc_pid[256];
+	int pidkill;
+	char procnan[15] = "pgrep procnanny";
+	pid_t parent_pid = getpid();
+	file = popen( procnan , "r");
+	if (file == NULL){
+		//popen error
+	}
+	while (fgets(proc_pid, 256, file) != NULL){
+		pidkill = atoi(proc_pid);
+		if(pidkill != parent_pid){
+			kill(pidkill,1);
+		}
+	}
+			
+}
 
 
 
 
 
 
-
-// TODO *****
-
-//1) ----------Read in config file
-
-//2) generate log file
-
-//3) Find which processes are running/need to be monitored
-
-//4) fork children to monitor process
-
-//5) Send/recieve message between children/parent when process is to be killed
-
-//6) Kill processes
-
-//7) Send processes killed info to logfile
-
-//8) exit
 
 
