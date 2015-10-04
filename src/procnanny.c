@@ -2,19 +2,30 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include "memwatch.h"
 
 
 void writeToLog(char *message);
 void killProcNanny();
-char* PROCNANNYLOGS = "../tmp/logfile.txt";
+char log_name[13] = "PROCNANNYLOGS";
+char *output_log;
+char *home_dir;
 //Procnanny
 int main(int argc, char* argv[])
 {
-	printf("test");
-    char const* const filename = argv[1];
+    char *filename = argv[1];
     FILE* config = fopen(filename, "r"); 
     char line[256];
     char processnames[129][256];
+    output_log = getenv(log_name);
+    home_dir = getenv("HOME");
+    if (output_log[0] == '~') {
+    	memmove(output_log, output_log+1, strlen(output_log));
+    }
+    strcat(home_dir, output_log);
+    output_log = home_dir;
    
     int killtime;  
 
@@ -29,7 +40,6 @@ int main(int argc, char* argv[])
         	strcpy(processnames[pnames_counter],line);
         	pnames_counter++;
     	}
-    	printf("%d\n", pnames_counter); 
     }
     fclose(config);
 
@@ -37,7 +47,8 @@ int main(int argc, char* argv[])
 
    	//clear previous data
    	FILE *logfile;
-    logfile = fopen(PROCNANNYLOGS, "w");
+    logfile = fopen(output_log, "w");
+    fflush(logfile);
     fclose(logfile);
    
 
@@ -49,8 +60,11 @@ int main(int argc, char* argv[])
 	int pidtokill;
 	int processkilled_count = 0;
 	int child;
-	char msg[256];
+	char msg[512];
 	int i = 0;
+	int k;
+	int exit_status = 0;
+	char processes_killed[3];
 	for (i = 1; i<pnames_counter; i++){
 		strcpy(pnames, "pgrep ");
 		strtok(processnames[i],"\n");
@@ -99,14 +113,13 @@ int main(int argc, char* argv[])
 				} else {
 					printf("%d killed early\n", pidtokill);
 					//process exited earlier, no need to log output.
-					exit(-1);
+					exit(0);
 				}
 
 			}
 			processkilled_count++;
 		}
 		if (found_pid == 0){
-			printf("%s file null\n",pnames);
 			//process is not running
 			strcpy(msg, "Info: No '");
 			strtok(processnames[i],"\n");
@@ -123,20 +136,27 @@ int main(int argc, char* argv[])
 		    break;
 		}
 	}
-	int k;
-	int exit_status;
-	printf("processes: %d\n", processkilled_count);
 	for (k = 0; k < processkilled_count; k++){
 		wait(&exit_status);
+		printf("process: %d\n",k);
+		printf("exit status: %d\n",exit_status);
+
 	}
+	sprintf(processes_killed, "%d", processkilled_count);
+	strcpy(msg, "Info: Exiting. ");
+	strtok(processes_killed,"\n");
+	strcat(msg, processes_killed);
+	strcat(msg," proccess(es) killed.");
+	writeToLog(msg);
 	return 0;
 }
 
 void writeToLog(char *message){
 	FILE *logfile;
-    logfile = fopen(PROCNANNYLOGS, "a");
+    logfile = fopen(output_log, "a");
     time_t date;
     fprintf(logfile, "[%s] %s\n",ctime(&date),message);
+    fflush(logfile);
     fclose(logfile);
 }
 
