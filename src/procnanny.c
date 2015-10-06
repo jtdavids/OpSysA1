@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 #include "memwatch.h"
 
 
@@ -20,12 +21,15 @@ int main(int argc, char* argv[])
     char line[256];
     char processnames[129][256];
     output_log = getenv(log_name);
-    home_dir = getenv("HOME");
+    
     if (output_log[0] == '~') {
+    	printf("entered ~");
+    	home_dir = getenv("HOME");
     	memmove(output_log, output_log+1, strlen(output_log));
+    	strcat(home_dir, output_log);
+    	output_log = home_dir;
     }
-    strcat(home_dir, output_log);
-    output_log = home_dir;
+    
    
     int killtime;  
 
@@ -53,7 +57,6 @@ int main(int argc, char* argv[])
    
 
 	FILE *file;
-	int checksuccess;
 	int found_pid = 0;
 	char pid[256];
 	char pnames[262] = "pgrep ";
@@ -78,7 +81,8 @@ int main(int argc, char* argv[])
 		while (fgets(pid, 256, file) != NULL){
 			printf("%s\n",pid);
 			found_pid = 1;
-			if((child = fork()) < 0){
+			child = fork();
+			if(child < 0){
 
 			} else if (child == 0){
 				//child
@@ -93,7 +97,7 @@ int main(int argc, char* argv[])
 				writeToLog(msg);
 
 				sleep(killtime);
-				int result = kill(pidtokill,1);
+				int result = kill(pidtokill,SIGKILL);
 				char kill_time[6];
 				sprintf(kill_time, "%d", killtime);
 
@@ -109,11 +113,11 @@ int main(int argc, char* argv[])
 					strcat(msg, kill_time);
 					strcat(msg, " seconds.");
 					writeToLog(msg);
-					exit(0);
+					exit(EXIT_SUCCESS);
 				} else {
 					printf("%d killed early\n", pidtokill);
 					//process exited earlier, no need to log output.
-					exit(0);
+					exit(EXIT_SUCCESS);
 				}
 
 			}
@@ -126,22 +130,18 @@ int main(int argc, char* argv[])
 			strcat(msg, processnames[i]);
 			strcat(msg,"' proccesses found.");
 			writeToLog(msg);
-			continue;
 		}
 		found_pid = 0;
 
-		checksuccess = pclose(file);
-		if (checksuccess == -1) {
-		    //report error and break?
-		    break;
-		}
+		pclose(file);
+		
 	}
+	printf("parent wait start\n");
 	for (k = 0; k < processkilled_count; k++){
 		wait(&exit_status);
-		printf("process: %d\n",k);
-		printf("exit status: %d\n",exit_status);
-
 	}
+	printf("parent finished\n");
+	sleep(1);
 	sprintf(processes_killed, "%d", processkilled_count);
 	strcpy(msg, "Info: Exiting. ");
 	strtok(processes_killed,"\n");
@@ -155,26 +155,29 @@ void writeToLog(char *message){
 	FILE *logfile;
     logfile = fopen(output_log, "a");
     time_t date;
-    fprintf(logfile, "[%s] %s\n",ctime(&date),message);
-    fflush(logfile);
+    time(&date);
+    char* print_date = ctime(&date);
+    strtok(print_date,"\n");
+    fprintf(logfile, "[%s] %s\n",print_date,message);
     fclose(logfile);
 }
 
 void killProcNanny(){
 	FILE *file;
-	int checksuccess;
 	char proc_pid[256];
 	int pidkill;
-	char procnan[15] = "pgrep procnanny";
+	char procnan[20] = "pgrep procnanny";
 	pid_t parent_pid = getpid();
+	printf("entered killnanny\n");
 	file = popen( procnan , "r");
 	if (file == NULL){
 		//popen error
 	}
 	while (fgets(proc_pid, 256, file) != NULL){
 		pidkill = atoi(proc_pid);
+		printf("%s\n",proc_pid);
 		if(pidkill != parent_pid){
-			kill(pidkill,1);
+			kill(pidkill,SIGKILL);
 		}
 	}
 			

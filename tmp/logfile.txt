@@ -1,16 +1,7 @@
-[Wed Dec 31 17:00:00 1969
-] Info: Initializing monitoring of process 'ls' (PID 2013).
-[Wed Dec 31 17:00:00 1969
-] Info: Initializing monitoring of process 'ls' (PID 1471).
-[Wed Dec 31 17:00:00 1969
-] Info: No 'cd' proccesses found.
-[Wed Dec 31 17:00:00 1969
-] Info: No 'thisshouldnotwork' proccesses found.
-[Wed Dec 31 17:00:00 1969
-] Info: No 'firefox' proccesses found.
-[Wed Dec 31 17:00:00 1969
-] Info: No 'testrun' proccesses found.
-[Wed Dec 31 17:00:00 1969
-] Info: Exiting. 2 proccess(es) killed.
-[Wed Dec 31 17:00:00 1969
-] Action: PID 2013 (ls) killed after exceeding 5 seconds.
+[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'firefox' (PID 2619).
+[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'testrun' (PID 2614).
+[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'testrun' (PID 2613).
+[Tue Oct  6 10:26:02 2015] Action: PID 2619 (firefox) killed after exceeding 30 seconds.
+[Tue Oct  6 10:26:02 2015] Action: PID 2614 (testrun) killed after exceeding 30 seconds.
+[Tue Oct  6 10:26:02 2015] Action: PID 2613 (testrun) killed after exceeding 30 seconds.
+[Tue Oct  6 10:26:03 2015] Info: Exiting. 3 proccess(es) killed.

@@ -1,6 +1,6 @@
 procnanny: procnanny.c 
-	gcc procnanny.c -o procnanny
-	gcc -Wall -DMEMWATCH -DMW_STDIO memwatch.c
+	#gcc procnanny.c -o procnanny
+	gcc -Wall -DMEMWATCH -DMW_STDIO procnanny.c memwatch.c -o procnanny
 
 clean:
-	rm procnanny
+	rm procnanny a.out
