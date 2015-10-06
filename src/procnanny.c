@@ -23,7 +23,6 @@ int main(int argc, char* argv[])
     output_log = getenv(log_name);
     
     if (output_log[0] == '~') {
-    	printf("entered ~");
     	home_dir = getenv("HOME");
     	memmove(output_log, output_log+1, strlen(output_log));
     	strcat(home_dir, output_log);
@@ -72,14 +71,12 @@ int main(int argc, char* argv[])
 		strcpy(pnames, "pgrep ");
 		strtok(processnames[i],"\n");
 		strcat(pnames, processnames[i]);
-		printf("%s\n",pnames);
 
 		file = popen( pnames , "r");
 		if (file == NULL){
 			//popen error
 		}
 		while (fgets(pid, 256, file) != NULL){
-			printf("%s\n",pid);
 			found_pid = 1;
 			child = fork();
 			if(child < 0){
@@ -115,7 +112,6 @@ int main(int argc, char* argv[])
 					writeToLog(msg);
 					exit(EXIT_SUCCESS);
 				} else {
-					printf("%d killed early\n", pidtokill);
 					//process exited earlier, no need to log output.
 					exit(EXIT_SUCCESS);
 				}
@@ -136,11 +132,9 @@ int main(int argc, char* argv[])
 		pclose(file);
 		
 	}
-	printf("parent wait start\n");
 	for (k = 0; k < processkilled_count; k++){
 		wait(&exit_status);
 	}
-	printf("parent finished\n");
 	sleep(1);
 	sprintf(processes_killed, "%d", processkilled_count);
 	strcpy(msg, "Info: Exiting. ");
@@ -168,14 +162,12 @@ void killProcNanny(){
 	int pidkill;
 	char procnan[20] = "pgrep procnanny";
 	pid_t parent_pid = getpid();
-	printf("entered killnanny\n");
 	file = popen( procnan , "r");
 	if (file == NULL){
 		//popen error
 	}
 	while (fgets(proc_pid, 256, file) != NULL){
 		pidkill = atoi(proc_pid);
-		printf("%s\n",proc_pid);
 		if(pidkill != parent_pid){
 			kill(pidkill,SIGKILL);
 		}

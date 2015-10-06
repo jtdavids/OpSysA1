@@ -1,7 +1,9 @@
-[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'firefox' (PID 2619).
-[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'testrun' (PID 2614).
-[Tue Oct  6 10:25:32 2015] Info: Initializing monitoring of process 'testrun' (PID 2613).
-[Tue Oct  6 10:26:02 2015] Action: PID 2619 (firefox) killed after exceeding 30 seconds.
-[Tue Oct  6 10:26:02 2015] Action: PID 2614 (testrun) killed after exceeding 30 seconds.
-[Tue Oct  6 10:26:02 2015] Action: PID 2613 (testrun) killed after exceeding 30 seconds.
-[Tue Oct  6 10:26:03 2015] Info: Exiting. 3 proccess(es) killed.
+[Tue Oct  6 10:30:29 2015] Info: Initializing monitoring of process 'firefox' (PID 2761).
+[Tue Oct  6 10:30:29 2015] Info: Initializing monitoring of process 'testrun' (PID 2756).
+[Tue Oct  6 10:30:29 2015] Info: Initializing monitoring of process 'testrun' (PID 2755).
+[Tue Oct  6 10:30:29 2015] Info: Initializing monitoring of process 'testrun' (PID 2754).
+[Tue Oct  6 10:30:59 2015] Action: PID 2761 (firefox) killed after exceeding 30 seconds.
+[Tue Oct  6 10:30:59 2015] Action: PID 2756 (testrun) killed after exceeding 30 seconds.
+[Tue Oct  6 10:30:59 2015] Action: PID 2755 (testrun) killed after exceeding 30 seconds.
+[Tue Oct  6 10:30:59 2015] Action: PID 2754 (testrun) killed after exceeding 30 seconds.
+[Tue Oct  6 10:31:00 2015] Info: Exiting. 4 proccess(es) killed.
